@@ -1,0 +1,69 @@
+<html>
+<head>
+    <title>VideoPlayer</title>
+    <style>
+        /* Hier können Sie den CSS-Code für das Layout und das Design der Seite schreiben */
+        body {
+            background-color: lightblue;
+            font-family: Arial, sans-serif;
+        }
+        #container {
+            width: 80%;
+            margin: auto;
+        }
+        #video {
+            width: 100%;
+            height: 500px;
+        }
+        #input-form {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-top: 20px;
+        }
+        #input {
+            width: 70%;
+            padding: 10px;
+            border: 1px solid black;
+            border-radius: 5px;
+        }
+        #button {
+            width: 10%;
+            padding: 10px;
+            background-color: green;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+    </style>
+    <script>
+        // Hier können Sie den JavaScript-Code für die Funktionalität der Seite schreiben
+        function playVideo() {
+            // Diese Funktion wird aufgerufen, wenn der Benutzer auf den Button klickt
+            var input = document.getElementById("input"); // Das Eingabefeld
+            var video = document.getElementById("video"); // Der Videoplayer
+            var url = input.value; // Der eingegebene Link
+            if (url) {
+                // Wenn der Link nicht leer ist
+                video.src = url; // Den Link als Quelle für den Videoplayer setzen
+                video.play(); // Das Video abspielen
+                input.value = ""; // Das Eingabefeld leeren
+            } else {
+                // Wenn der Link leer ist
+                alert("Bitte geben Sie einen gültigen Link ein"); // Eine Warnung anzeigen
+            }
+        }
+    </script>
+</head>
+<body>
+    <div id="container">
+        <h1>VideoPlayer</h1>
+        <video id="video" controls></video>
+        <form id="input-form">
+            <input type="text" id="input" placeholder="Geben Sie hier einen Link zu einem Video ein">
+            <button type="button" id="button" onclick="playVideo()">Abspielen</button>
+        </form>
+    </div>
+</body>
+</html>
