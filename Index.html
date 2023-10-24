@@ -1,0 +1,110 @@
+<html>
+<head>
+  <title>Einmaliges Bild</title>
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+  <style>
+    #upload-form, #image-container {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      margin: 20px;
+    }
+    #upload-form input[type=file] {
+      margin-bottom: 10px;
+    }
+    #image-container img {
+      max-width: 600px;
+      max-height: 400px;
+    }
+    #image-container p {
+      font-weight: bold;
+      color: red;
+    }
+  </style>
+</head>
+<body>
+  <div id="upload-form">
+    <h1>Einmaliges Bild</h1>
+    <p>Lade ein Bild hoch und erhalte einen Link oder eine Nummer, um es anzusehen.</p>
+    <p>Das Bild wird nur einmalig für 5 Sekunden sichtbar sein und kann nicht gescreenshotet oder kopiert werden.</p>
+    <input type="file" id="file-input" accept="image/*">
+    <button id="upload-button">Hochladen</button>
+  </div>
+  <div id="image-container" hidden>
+    <img id="image" src="">
+    <p id="timer">5</p>
+  </div>
+  <script>
+    // Eine Funktion, um eine zufällige Nummer zwischen min und max zu generieren
+    function getRandomNumber(min, max) {
+      return Math.floor(Math.random() * (max - min + 1)) + min;
+    }
+
+    // Eine Funktion, um eine zufällige Zeichenkette aus Buchstaben und Zahlen zu generieren
+    function getRandomString(length) {
+      var chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+      var result = "";
+      for (var i = 0; i < length; i++) {
+        result += chars.charAt(getRandomNumber(0, chars.length - 1));
+      }
+      return result;
+    }
+
+    // Eine Funktion, um das Bild zu verstecken und die Seite zurückzusetzen
+    function hideImage() {
+      $("#image-container").hide();
+      $("#upload-form").show();
+      $("#file-input").val("");
+      $("#image").attr("src", "");
+      $("#timer").text("5");
+    }
+
+    // Eine Funktion, um den Timer zu aktualisieren und das Bild zu verstecken, wenn er abläuft
+    function updateTimer() {
+      var seconds = parseInt($("#timer").text());
+      if (seconds > 0) {
+        seconds--;
+        $("#timer").text(seconds);
+        setTimeout(updateTimer, 1000);
+      } else {
+        hideImage();
+      }
+    }
+
+    // Ein Event-Listener für den Upload-Button
+    $("#upload-button").click(function() {
+      // Überprüfe, ob eine Datei ausgewählt wurde
+      var file = $("#file-input")[0].files[0];
+      if (file) {
+        // Erstelle einen FileReader, um die Datei zu lesen
+        var reader = new FileReader();
+        reader.onload = function(e) {
+          // Erstelle einen Blob aus dem Dateiinhalt
+          var blob = new Blob([e.target.result], {type: file.type});
+          // Erstelle eine URL für den Blob
+          var url = URL.createObjectURL(blob);
+          // Zeige das Bild an
+          $("#image").attr("src", url);
+          $("#upload-form").hide();
+          $("#image-container").show();
+          // Starte den Timer
+          updateTimer();
+          // Erstelle einen zufälligen Link oder eine Nummer für das Bild
+          var linkOrNumber = Math.random() > 0.5 ? getRandomString(10) : getRandomNumber(100000, 999999);
+          // Zeige den Link oder die Nummer an
+          alert("Dein Link oder deine Nummer für das Bild ist: " + linkOrNumber);
+        };
+        reader.readAsArrayBuffer(file);
+      } else {
+        alert("Bitte wähle eine Datei aus.");
+      }
+    });
+
+    // Ein Event-Listener für das Bild, um das Kopieren oder Screenshoten zu verhindern
+    $("#image").on("contextmenu dragstart selectstart copy cut paste", function(e) {
+      e.preventDefault();
+      alert("Du kannst das Bild nicht kopieren oder screenshoten.");
+    });
+  </script>
+</body>
+</html>
